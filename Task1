@@ -5,6 +5,7 @@ async function buildPlot() {
     const dateParser = d3.timeParse("%Y-%m-%d");
     const yAccessor = (d) => d.temperatureMin;
     const xAccessor = (d) => dateParser(d.date);
+    const x2Accessor = (d) => d.temperatureMax;
     // Функции для инкапсуляции доступа к колонкам набора данных
 
     var dimension = {
@@ -36,8 +37,12 @@ async function buildPlot() {
         .domain(d3.extent(data,xAccessor))
         .range([0,dimension.boundedWidth]);
 
+    const x2Scaler = d3.scaleLinear()
+        .domain(d3.extent(data,x2Accessor))
+        .range([0,dimension.boundedWidth]);
+
     var lineGenerator = d3.line()
-        .x(d => xScaler(xAccessor(d)))
+        .x(d => x2Scaler(x2Accessor(d)))
         .y(d => yScaler(yAccessor(d)));
 
     bounded.append("path")
